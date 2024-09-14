@@ -10,10 +10,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   await Supabase.initialize(
     url: 'https://gfcpqnvcucjkjdgkaetw.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final MsdFilter _msdFilterData = MsdFilter(76, data: [
     0x02,
     0x15,
@@ -84,6 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
     1
   ]);
 
+  String _major = '0000';
+  String _minor = '0000';
+
   @override
   void initState() {
     _init();
@@ -98,12 +101,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _startBeacon() async {
+  void _startBeacon(String major, String minor) async {
     try {
+      final isBroadcasting = await flutterBeacon.isBroadcasting();
+
+      if (isBroadcasting) {
+        await flutterBeacon.stopBroadcast();
+      }
+
       await flutterBeacon.startBroadcast(BeaconBroadcast(
           proximityUUID: "97b7571b-5718-bc11-a7d3-86024cda3b5c",
-          major: 0,
-          minor: 5,
+          major: int.parse(major, radix: 16),
+          minor: int.parse(minor, radix: 16),
           identifier: "dev.mitsutan.spajam2024_kumamoto"));
     } catch (e) {
       log('Start broadcast error', name: 'beacon', error: e);
@@ -118,10 +127,52 @@ class _MyHomePageState extends State<MyHomePage> {
 
     FlutterBluePlus.scanResults.listen((results) {
       // updateScanResults(results);
-      log('Scan results: $results', name: 'FlutterBluePlus');
+      // log('Scan results: $results', name: 'FlutterBluePlus');
+      for (final result in results) {
+        // log('Scan result: ${result.advertisementData.manufacturerData}', name: 'FlutterBluePlus');
+        final major1 = result.advertisementData.manufacturerData.values.first
+            .elementAt(18)
+            .toRadixString(16);
+        final major2 = result.advertisementData.manufacturerData.values.first
+            .elementAt(19)
+            .toRadixString(16);
+        final minor1 = result.advertisementData.manufacturerData.values.first
+            .elementAt(20)
+            .toRadixString(16);
+        final minor2 = result.advertisementData.manufacturerData.values.first
+            .elementAt(21)
+            .toRadixString(16);
+        log('major: $major1$major2, minor: $minor1$minor2');
+
+        // major, minorをidに変換しmessageを取得
+        final id = int.parse('$major1$major2$minor1$minor2', radix: 16);
+        final client = Supabase.instance.client;
+        client.from('messages').select().eq('id', id).then((data) {
+          log('Message: ${data.first}', name: 'supabase');
+        });
+      }
     }, onError: (e) {
       log('Scan error', name: 'FlutterBluePlus', error: e);
     });
+  }
+
+  void _postMessage(String msg) async {
+    final client = Supabase.instance.client;
+    try {
+      final data = await client.from('messages').upsert({
+        'message': msg,
+      }).select();
+      // idを16進数に変換
+      final id = data.first['id'].toRadixString(16).padLeft(8, '0');
+      setState(() {
+        _major = id.substring(0, 4);
+        _minor = id.substring(4, 8);
+      });
+      log('Posted message: ${data.first['id']}', name: 'supabase');
+      // log('Posted message: $id', name: 'supabase');
+    } catch (e) {
+      log('Failed to post message', name: 'supabase', error: e);
+    }
   }
 
   @override
@@ -131,18 +182,30 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            const Text(
+              'input message',
             ),
+            const TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              decoration: InputDecoration(
+                hintText: "Enter your text here",
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  _postMessage('test4');
+                },
+                icon: const Icon(Icons.send)),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _startBeacon,
+        onPressed: () => _startBeacon(_major, _minor),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
