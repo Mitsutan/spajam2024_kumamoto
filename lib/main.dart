@@ -103,6 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Map<String, dynamic>> _scanResult = [];
 
+  String _inputMsg = '';
+
   @override
   void initState() {
     _init();
@@ -139,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       await FlutterBluePlus.startScan(
-          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 5));
+          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 10));
     } catch (e) {
       log('Start scan Err', name: 'beacon', error: e);
     }
@@ -151,6 +153,9 @@ class _MyHomePageState extends State<MyHomePage> {
       log('Scan results: $results', name: 'FlutterBluePlus');
       for (final result in results) {
         // log('Scan result: ${result.advertisementData.manufacturerData}', name: 'FlutterBluePlus');
+        if (result.advertisementData.manufacturerData.isEmpty) {
+          continue;
+        }
         final major1 = result.advertisementData.manufacturerData.values.first
             .elementAt(18)
             .toRadixString(16);
@@ -215,16 +220,21 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'input message',
             ),
-            const TextField(
+            TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Enter your text here",
               ),
+              onChanged: (value) {
+                setState(() {
+                  _inputMsg = value;
+                });
+              },
             ),
             IconButton(
                 onPressed: () {
-                  _postMessage('hello world!');
+                  _postMessage(_inputMsg);
                 },
                 icon: const Icon(Icons.send)),
             Expanded(
