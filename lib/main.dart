@@ -87,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _major = '0000';
   String _minor = '0000';
 
+  List<Map<String, dynamic>> _scanResult = [];
+
   @override
   void initState() {
     _init();
@@ -126,8 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     FlutterBluePlus.scanResults.listen((results) {
-      // updateScanResults(results);
-      // log('Scan results: $results', name: 'FlutterBluePlus');
+      log('Scan results: $results', name: 'FlutterBluePlus');
       for (final result in results) {
         // log('Scan result: ${result.advertisementData.manufacturerData}', name: 'FlutterBluePlus');
         final major1 = result.advertisementData.manufacturerData.values.first
@@ -142,15 +143,20 @@ class _MyHomePageState extends State<MyHomePage> {
         final minor2 = result.advertisementData.manufacturerData.values.first
             .elementAt(21)
             .toRadixString(16);
-        log('major: $major1$major2, minor: $minor1$minor2');
+        // log('major: $major1$major2, minor: $minor1$minor2');
 
         // major, minorをidに変換しmessageを取得
         final id = int.parse('$major1$major2$minor1$minor2', radix: 16);
         final client = Supabase.instance.client;
         client.from('messages').select().eq('id', id).then((data) {
-          log('Message: ${data.first}', name: 'supabase');
+          // log('Message: ${data.first}', name: 'supabase');
+          // _scanResult.add(data.first);
+          setState(() {
+            _scanResult.add(data.first);
+          });
         });
       }
+
     }, onError: (e) {
       log('Scan error', name: 'FlutterBluePlus', error: e);
     });
@@ -198,9 +204,23 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             IconButton(
                 onPressed: () {
-                  _postMessage('test4');
+                  _postMessage('hello world!');
                 },
                 icon: const Icon(Icons.send)),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: _scanResult.length,
+                  itemBuilder: (context, index) {
+                    final result = _scanResult[index];
+
+                    log('result: $result');
+
+                    return ListTile(
+                      title: Text(result['message']),
+                      subtitle: Text('id: ${result['id']}, created_at: ${result['created_at']}'),
+                    );
+                  }),
+            ),
           ],
         ),
       ),
