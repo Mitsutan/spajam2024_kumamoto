@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_beacon/flutter_beacon.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,12 +36,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  Future<void> _init() async {
+    try {
+      await flutterBeacon.initializeScanning;
+    } on PlatformException catch (e) {
+      log('Failed to initialize scanning', name: 'beacon', error: e);
+    }
+  }
+
+  void _startBeacon() async {
+    try {
+      await flutterBeacon.startBroadcast(BeaconBroadcast(
+          proximityUUID: "124586a6-8b4f-213b-0a00-3098e304ed50",
+          major: 0,
+          minor: 5,
+          identifier: "dev.mitsutan.spajam2024_kumamoto"));
+    } catch (e) {
+      log('Start broadcast error', name: 'beacon', error: e);
+    }
   }
 
   @override
@@ -46,22 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'You have pushed the button this many times:',
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _startBeacon,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
