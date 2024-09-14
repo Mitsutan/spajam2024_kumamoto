@@ -53,9 +53,10 @@ class _InsertScreen extends State<InsertScreen> {
                 child: Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop(); // ダイアログを閉じる
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomeScreen(title: "home")), // ホーム画面に遷移
-                  );
+                  Navigator.of(context).pushReplacementNamed('/'); // main.dartに遷移
+                  // Navigator.of(context).pushReplacement(
+                  //   MaterialPageRoute(builder: (context) => HomeScreen(title: "home")), // ホーム画面に遷移
+                  // );
                 },
               ),
             ),

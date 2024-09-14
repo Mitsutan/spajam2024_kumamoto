@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'empathy.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -193,7 +194,15 @@ class _HomeScreen extends State<HomeScreen> {
             ),
             ListTile(
               title: Text("aaaa"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EmpathyScreen(title: 'Empathy', message: 'aaaa'),
+
+                  ),
+                );
+              },
             ),
             Divider(
               color: Colors.black,
