@@ -178,7 +178,9 @@ class _HomeScreen extends State<HomeScreen> {
                 return Column(
                   children: [
                     ListTile(
-                      title: Text(result['message']),
+                      title: Text(result['message'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1),
                       // subtitle: Text(
                       //     'id: ${result['id']}, created_at: ${result['created_at']}'),
                       onTap: () {
