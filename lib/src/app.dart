@@ -37,8 +37,8 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   // 各画面のリスト
   static const _screens = [
-    HomeScreen(),
-    MapScreen(),
+    HomeScreen(title: 'aa',),
+    InsertScreen(title: 'bb',),
     SettingScreen()
   ];
   // 選択されている画面のインデックス
