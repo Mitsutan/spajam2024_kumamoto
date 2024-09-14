@@ -4,7 +4,7 @@ import 'screens/mypage.dart';
 import 'screens/insert.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required home, required Map<String, HomeScreen Function(dynamic context)> routes});
 
   @override
   Widget build(BuildContext context) {

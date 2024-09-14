@@ -16,7 +16,7 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
   );
 
-  runApp(const MyApp());
+  runApp(const MyApp(home: null, routes: {},));
 }
 
 // class MyApp extends StatelessWidget {
