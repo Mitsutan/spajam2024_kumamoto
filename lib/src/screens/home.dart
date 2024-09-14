@@ -11,8 +11,6 @@ class HomeScreen extends StatefulWidget {
 
   final String title;
 
-
-
   @override
   State<HomeScreen> createState() => _HomeScreen();
 }
@@ -59,11 +57,7 @@ class _HomeScreen extends State<HomeScreen> {
     1
   ]);
 
-  
-
   final List<Map<String, dynamic>> _scanResult = [];
-
-  
 
   @override
   void initState() {
@@ -115,7 +109,6 @@ class _HomeScreen extends State<HomeScreen> {
       });
       log('Scan results: $results', name: 'FlutterBluePlus');
       for (final result in results) {
-        // log('Scan result: ${result.advertisementData.manufacturerData}', name: 'FlutterBluePlus');
         if (result.advertisementData.manufacturerData.isEmpty) {
           continue;
         }
@@ -131,14 +124,10 @@ class _HomeScreen extends State<HomeScreen> {
         final minor2 = result.advertisementData.manufacturerData.values.first
             .elementAt(21)
             .toRadixString(16);
-        // log('major: $major1$major2, minor: $minor1$minor2');
 
-        // major, minorをidに変換しmessageを取得
         final id = int.parse('$major1$major2$minor1$minor2', radix: 16);
         final client = Supabase.instance.client;
         client.from('messages').select().eq('id', id).then((data) {
-          // log('Message: ${data.first}', name: 'supabase');
-          // _scanResult.add(data.first);
           setState(() {
             _scanResult.add(data.first);
           });
@@ -149,8 +138,6 @@ class _HomeScreen extends State<HomeScreen> {
     });
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,24 +147,27 @@ class _HomeScreen extends State<HomeScreen> {
         style: TextStyle(color: Colors.white), 
       ),
       ),
-      body:  Center(
-          child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                  itemCount: _scanResult.length,
-                  itemBuilder: (context, index) {
-                    final result = _scanResult[index];
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _scanResult.length,
+              itemBuilder: (context, index) {
+                final result = _scanResult[index];
 
-                    log('result: $result');
+                log('result: $result');
 
-                    return ListTile(
+                return Column(
+                  children: [
+                    ListTile(
                       title: Text(result['message']),
                       subtitle: Text(
                           'id: ${result['id']}, created_at: ${result['created_at']}'),
                       onTap: () {
-                        // このmessageのgood数を増やす
                         try {
                           final client = Supabase.instance.client;
                           client.rpc('increment', params: {
@@ -191,46 +181,46 @@ class _HomeScreen extends State<HomeScreen> {
                               name: 'supabase', error: e);
                         }
                       },
-                    );
-                  }),
-                  
+                    ),
+                    Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
+                    SizedBox(height: 10), // 隙間を追加
+                  ],
+                );
+              },
             ),
             ListTile(
-                      title: Text("aaaa"),
-                      
-    
-                      onTap: () {
-                        // このmessageのgood数を増やす
-                        
-                        
-                      },
-                    ),
-                                ListTile(
-                      title: Text("bbbb"),
-                      
-    
-                      onTap: () {
-                        // このmessageのgood数を増やす
-                        
-                        
-                      },
-                    ),            ListTile(
-                      title: Text("cccc"),
-                      
-    
-                      onTap: () {
-                        // このmessageのgood数を増やす
-                        
-                        
-                      },
-                    )
+              title: Text("aaaa"),
+              onTap: () {},
+            ),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
+            SizedBox(height: 10), // 隙間を追加
+            ListTile(
+              title: Text("bbbb"),
+              onTap: () {},
+            ),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
+            SizedBox(height: 10), // 隙間を追加
+            ListTile(
+              title: Text("cccc"),
+              onTap: () {},
+            ),
+            Divider(
+              color: Colors.black,
+              thickness: 1,
+            ),
+            SizedBox(height: 10), // 隙間を追加
           ],
         ),
       ),
-
     );
   }
-
-  
-
 }
