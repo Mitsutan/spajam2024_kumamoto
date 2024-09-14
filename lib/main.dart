@@ -141,7 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       await FlutterBluePlus.startScan(
-          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 10));
+          withMsd: [_msdFilterData],
+          androidUsesFineLocation: true,
+          continuousUpdates: true,
+          removeIfGone: const Duration(seconds: 10));
     } catch (e) {
       log('Start scan Err', name: 'beacon', error: e);
     }
@@ -181,7 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         });
       }
-
     }, onError: (e) {
       log('Scan error', name: 'FlutterBluePlus', error: e);
     });
@@ -247,18 +249,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     return ListTile(
                       title: Text(result['message']),
-                      subtitle: Text('id: ${result['id']}, created_at: ${result['created_at']}'),
+                      subtitle: Text(
+                          'id: ${result['id']}, created_at: ${result['created_at']}'),
                       onTap: () {
                         // このmessageのgood数を増やす
                         try {
                           final client = Supabase.instance.client;
-                        client.rpc('increment',  params: { "x": 1, "row_id": result['id'] }).then((data) {
-                          log('Gooded message: $data', name: 'supabase');
-                        });
+                          client.rpc('increment', params: {
+                            "x": 1,
+                            "row_id": result['id']
+                          }).then((data) {
+                            log('Gooded message: $data', name: 'supabase');
+                          });
                         } catch (e) {
-                          log('Failed to good message', name: 'supabase', error: e);
+                          log('Failed to good message',
+                              name: 'supabase', error: e);
                         }
-                        
                       },
                     );
                   }),
