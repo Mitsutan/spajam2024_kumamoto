@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://gfcpqnvcucjkjdgkaetw.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
+  );
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
