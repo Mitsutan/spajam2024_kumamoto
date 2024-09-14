@@ -109,6 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       if (isBroadcasting) {
         await flutterBeacon.stopBroadcast();
+        setState(() {
+          _scanResult.clear();
+        });
       }
 
       await flutterBeacon.startBroadcast(BeaconBroadcast(
@@ -122,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       await FlutterBluePlus.startScan(
-          withMsd: [_msdFilterData], androidUsesFineLocation: true);
+          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 1));
     } catch (e) {
       log('Start scan Err', name: 'beacon', error: e);
     }
