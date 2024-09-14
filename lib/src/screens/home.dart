@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 
   final String title;
 
+
+
   @override
   State<HomeScreen> createState() => _HomeScreen();
 }
@@ -191,10 +193,44 @@ class _HomeScreen extends State<HomeScreen> {
                       },
                     );
                   }),
+                  
             ),
+            ListTile(
+                      title: Text("aaaa"),
+                      
+    
+                      onTap: () {
+                        // このmessageのgood数を増やす
+                        
+                        
+                      },
+                    ),
+                                ListTile(
+                      title: Text("bbbb"),
+                      
+    
+                      onTap: () {
+                        // このmessageのgood数を増やす
+                        
+                        
+                      },
+                    ),            ListTile(
+                      title: Text("cccc"),
+                      
+    
+                      onTap: () {
+                        // このmessageのgood数を増やす
+                        
+                        
+                      },
+                    )
           ],
         ),
       ),
+
     );
   }
+
+  
+
 }
