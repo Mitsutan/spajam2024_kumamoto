@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spajam2024_kumamoto/src/screens/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'home.dart';
@@ -21,6 +23,29 @@ class _InsertScreen extends State<InsertScreen> {
   String _major = '0000';
   String _minor = '0000';
 
+  late SharedPreferences _sp;
+
+  void _startBeacon(String major, String minor) async {
+    try {
+      final isBroadcasting = await flutterBeacon.isBroadcasting();
+
+      if (isBroadcasting) {
+        await flutterBeacon.stopBroadcast();
+        // setState(() {
+        //   _scanResult.clear();
+        // });
+      }
+
+      await flutterBeacon.startBroadcast(BeaconBroadcast(
+          proximityUUID: "97b7571b-5718-bc11-a7d3-86024cda3b5c",
+          major: int.parse(major, radix: 16),
+          minor: int.parse(minor, radix: 16),
+          identifier: "dev.mitsutan.spajam2024_kumamoto"));
+    } catch (e) {
+      log('Start broadcast error', name: 'beacon', error: e);
+    }
+  }
+
   void _postMessage(String msg) async {
     final client = Supabase.instance.client;
     try {
@@ -29,6 +54,7 @@ class _InsertScreen extends State<InsertScreen> {
       }).select();
       // idを16進数に変換
       final id = data.first['id'].toRadixString(16).padLeft(8, '0');
+      await _sp.setStringList("MY_MESSAGE_ID", [...?_sp.getStringList("MY_MESSAGE_ID"), data.first['id'].toString()]);
       setState(() {
         _major = id.substring(0, 4);
         _minor = id.substring(4, 8);
@@ -52,6 +78,7 @@ class _InsertScreen extends State<InsertScreen> {
               child: TextButton(
                 child: Text('OK'),
                 onPressed: () {
+                  _startBeacon(_major, _minor);
                   Navigator.of(context).pop(); // ダイアログを閉じる
                   Navigator.of(context).pushReplacementNamed('/'); // main.dartに遷移
                   // Navigator.of(context).pushReplacement(
@@ -91,7 +118,7 @@ class _InsertScreen extends State<InsertScreen> {
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: const InputDecoration(
-                hintText: "共感したい感情を入力してください",
+                hintText: "周りに共有したい感情を入力してください",
                 enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black),
               ),
