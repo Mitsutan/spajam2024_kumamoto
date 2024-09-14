@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!-- internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="spajam2024_kumamoto"
         android:name="${applicationName}"
