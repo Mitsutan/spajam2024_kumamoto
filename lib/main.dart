@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'src/app.dart';
 
 import 'package:flutter/services.dart';
@@ -108,6 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _inputMsg = '';
 
+  late SharedPreferences _sp;
+
   @override
   void initState() {
     _init();
@@ -117,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _init() async {
     try {
       await flutterBeacon.initializeScanning;
+      _sp = await SharedPreferences.getInstance();
     } on PlatformException catch (e) {
       log('Failed to initialize scanning', name: 'beacon', error: e);
     }
@@ -202,6 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }).select();
       // idを16進数に変換
       final id = data.first['id'].toRadixString(16).padLeft(8, '0');
+      await _sp.setStringList("MY_MESSAGE_ID", [...?_sp.getStringList("MY_MESSAGE_ID"), data.first['id'].toString()]);
       setState(() {
         _major = id.substring(0, 4);
         _minor = id.substring(4, 8);
