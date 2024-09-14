@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -20,9 +21,22 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<void> requestPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothAdvertise,
+      Permission.bluetoothScan,
+      // Permission.bluetoothConnect,
+      Permission.locationWhenInUse,
+      Permission.locationAlways,
+      // Permission.bluetooth
+    ].request();
+    log(statuses.toString(), name: 'PermissionStatus');
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    requestPermission();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -125,12 +139,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       await FlutterBluePlus.startScan(
-          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 1));
+          withMsd: [_msdFilterData], androidUsesFineLocation: true, continuousUpdates: true, removeIfGone: const Duration(seconds: 5));
     } catch (e) {
       log('Start scan Err', name: 'beacon', error: e);
     }
 
     FlutterBluePlus.scanResults.listen((results) {
+      setState(() {
+        _scanResult.clear();
+      });
       log('Scan results: $results', name: 'FlutterBluePlus');
       for (final result in results) {
         // log('Scan result: ${result.advertisementData.manufacturerData}', name: 'FlutterBluePlus');
