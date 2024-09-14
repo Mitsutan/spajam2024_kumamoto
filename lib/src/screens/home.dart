@@ -73,27 +73,6 @@ class _HomeScreen extends State<HomeScreen> {
     }
   }
 
-  void _startBeacon(String major, String minor) async {
-    try {
-      final isBroadcasting = await flutterBeacon.isBroadcasting();
-
-      if (isBroadcasting) {
-        await flutterBeacon.stopBroadcast();
-        setState(() {
-          _scanResult.clear();
-        });
-      }
-
-      await flutterBeacon.startBroadcast(BeaconBroadcast(
-          proximityUUID: "97b7571b-5718-bc11-a7d3-86024cda3b5c",
-          major: int.parse(major, radix: 16),
-          minor: int.parse(minor, radix: 16),
-          identifier: "dev.mitsutan.spajam2024_kumamoto"));
-    } catch (e) {
-      log('Start broadcast error', name: 'beacon', error: e);
-    }
-  }
-
   void _startScan() async {
     try {
       await FlutterBluePlus.startScan(
