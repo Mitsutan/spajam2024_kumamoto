@@ -42,7 +42,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     HomeScreen(title: 'aa',),
     InsertScreen(title: 'bb',),
-    SettingScreen()
+    MypageScreen(),
+    // SettingScreen()
 
 
   ];
