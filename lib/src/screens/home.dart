@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  
   final MsdFilter _msdFilterData = MsdFilter(76, data: [
     0x02,
     0x15,
@@ -93,7 +92,9 @@ class _HomeScreen extends State<HomeScreen> {
     } catch (e) {
       log('Start broadcast error', name: 'beacon', error: e);
     }
+  }
 
+  void _startScan() async {
     try {
       await FlutterBluePlus.startScan(
           withMsd: [_msdFilterData],
@@ -139,14 +140,26 @@ class _HomeScreen extends State<HomeScreen> {
     });
   }
 
+  void _stopScan() async {
+    try {
+      await FlutterBluePlus.stopScan();
+    } catch (e) {
+      log('Stop scan Err', name: 'beacon', error: e);
+    }
+
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('ホーム',
-        style: TextStyle(color: Colors.white), 
-      ),
+        title: const Text(
+          'ホーム',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -166,70 +179,91 @@ class _HomeScreen extends State<HomeScreen> {
                   children: [
                     ListTile(
                       title: Text(result['message']),
-                      subtitle: Text(
-                          'id: ${result['id']}, created_at: ${result['created_at']}'),
+                      // subtitle: Text(
+                      //     'id: ${result['id']}, created_at: ${result['created_at']}'),
                       onTap: () {
-                        try {
-                          final client = Supabase.instance.client;
-                          client.rpc('increment', params: {
-                            "x": 1,
-                            "row_id": result['id']
-                          }).then((data) {
-                            log('Gooded message: $data', name: 'supabase');
-                          });
-                        } catch (e) {
-                          log('Failed to good message',
-                              name: 'supabase', error: e);
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EmpathyScreen(
+                                title: 'Empathy', message: result['message']),
+                          ),
+                        );
+                        //   try {
+                        //     final client = Supabase.instance.client;
+                        //     client.rpc('increment', params: {
+                        //       "x": 1,
+                        //       "row_id": result['id']
+                        //     }).then((data) {
+                        //       log('Gooded message: $data', name: 'supabase');
+                        //     });
+                        //   } catch (e) {
+                        //     log('Failed to good message',
+                        //         name: 'supabase', error: e);
+                        //   }
                       },
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black,
                       thickness: 1,
                     ),
-                    SizedBox(height: 10), // 隙間を追加
+                    const SizedBox(height: 10), // 隙間を追加
                   ],
                 );
               },
             ),
-            ListTile(
-              title: Text("aaaa"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EmpathyScreen(title: 'Empathy', message: 'aaaa'),
-
-                  ),
-                );
-              },
-            ),
-            Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-            SizedBox(height: 10), // 隙間を追加
-            ListTile(
-              title: Text("bbbb"),
-              onTap: () {},
-            ),
-            Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-            SizedBox(height: 10), // 隙間を追加
-            ListTile(
-              title: Text("cccc"),
-              onTap: () {},
-            ),
-            Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-            SizedBox(height: 10), // 隙間を追加
+            // ListTile(
+            //   title: Text("aaaa"),
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) =>
+            //             EmpathyScreen(title: 'Empathy', message: 'aaaa'),
+            //       ),
+            //     );
+            //   },
+            // ),
+            // Divider(
+            //   color: Colors.black,
+            //   thickness: 1,
+            // ),
+            // SizedBox(height: 10), // 隙間を追加
+            // ListTile(
+            //   title: Text("bbbb"),
+            //   onTap: () {},
+            // ),
+            // Divider(
+            //   color: Colors.black,
+            //   thickness: 1,
+            // ),
+            // SizedBox(height: 10), // 隙間を追加
+            // ListTile(
+            //   title: Text("cccc"),
+            //   onTap: () {},
+            // ),
+            // Divider(
+            //   color: Colors.black,
+            //   thickness: 1,
+            // ),
+            // SizedBox(height: 10), // 隙間を追加
           ],
         ),
       ),
+      floatingActionButton: FlutterBluePlus.isScanningNow
+          ? FloatingActionButton(
+              onPressed: () {
+                _stopScan();
+              },
+              backgroundColor: Colors.red,
+              child: const Icon(Icons.stop),
+            )
+          : FloatingActionButton(
+              onPressed: () {
+                _startScan();
+              },
+              child: const Icon(Icons.bluetooth_searching),
+            ),
     );
   }
 }
