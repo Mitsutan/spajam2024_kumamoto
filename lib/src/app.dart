@@ -39,7 +39,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   static const _screens = [
     HomeScreen(),
     MapScreen(),
-    SettingScreen()
+    MypageScreen()
   ];
   // 選択されている画面のインデックス
   int _selectedIndex = 0;
