@@ -6,6 +6,8 @@ import 'screens/insert.dart';
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // const MyApp({super.key, required home, required Map<String, HomeScreen Function(dynamic context)> routes});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,9 +39,12 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   // 各画面のリスト
   static const _screens = [
-    HomeScreen(),
-    MapScreen(),
-    MypageScreen()
+
+    HomeScreen(title: 'aa',),
+    InsertScreen(title: 'bb',),
+    SettingScreen()
+
+
   ];
   // 選択されている画面のインデックス
   int _selectedIndex = 0;
