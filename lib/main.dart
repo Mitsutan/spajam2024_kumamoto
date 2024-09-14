@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _major = '0000';
   String _minor = '0000';
 
-  List<Map<String, dynamic>> _scanResult = [];
+  final List<Map<String, dynamic>> _scanResult = [];
 
   @override
   void initState() {
