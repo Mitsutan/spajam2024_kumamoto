@@ -218,6 +218,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     return ListTile(
                       title: Text(result['message']),
                       subtitle: Text('id: ${result['id']}, created_at: ${result['created_at']}'),
+                      onTap: () {
+                        // このmessageのgood数を増やす
+                        try {
+                          final client = Supabase.instance.client;
+                        client.rpc('increment',  params: { "x": 1, "row_id": result['id'] }).then((data) {
+                          log('Gooded message: $data', name: 'supabase');
+                        });
+                        } catch (e) {
+                          log('Failed to good message', name: 'supabase', error: e);
+                        }
+                        
+                      },
                     );
                   }),
             ),
