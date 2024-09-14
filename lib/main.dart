@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'src/app.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -18,8 +19,8 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
   Future<void> requestPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
