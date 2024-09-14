@@ -117,7 +117,9 @@ class _MyHomePageState extends State<MyHomePage> {
   String _major = '0000';
   String _minor = '0000';
 
-  final List<Map<String, dynamic>> _scanResult = [];
+  // final List<Map<String, dynamic>> _scanResult = [];
+  final Set<Map<String, dynamic>> _scanResult = {};
+
 
   String _inputMsg = '';
 
@@ -159,7 +161,9 @@ class _MyHomePageState extends State<MyHomePage> {
       await FlutterBluePlus.startScan(
           withMsd: [_msdFilterData],
           androidUsesFineLocation: true,
+          continuousDivisor: 10,
           continuousUpdates: true,
+          oneByOne: false,
           removeIfGone: const Duration(seconds: 10));
     } catch (e) {
       log('Start scan Err', name: 'beacon', error: e);
@@ -259,9 +263,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView.builder(
                   itemCount: _scanResult.length,
                   itemBuilder: (context, index) {
-                    final result = _scanResult[index];
+                    final result = _scanResult.elementAt(index);
 
-                    log('result: $result');
+                    // log('result: $result');
 
                     return ListTile(
                       title: Text(result['message']),
