@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spajam2024_kumamoto/src/screens/empathy.dart';
+import 'package:spajam2024_kumamoto/src/screens/home.dart';
 import 'src/app.dart';
 
 import 'package:flutter/services.dart';
@@ -17,7 +19,20 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
   );
 
-  runApp(const MyApp());
+  // runApp( MyApp(
+  //   home: null,
+  //   routes: {
+  //     '/main': (context) => const HomeScreen(title: 'Home'),
+  //   },));
+  runApp(MaterialApp(
+    routes: {
+      '/': (context) => const MyApp(),
+      '/main': (context) => HomeScreen(title: 'Home'),
+            '/empathy': (context) => const EmpathyScreen(title: 'Empathy', message: '',),
+      // 他のルートもここに追加
+    },
+    initialRoute: '/',
+  ));
 }
 
 // class MyApp extends StatelessWidget {
