@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -157,6 +158,9 @@ class _HomeScreen extends State<HomeScreen> {
                 return Column(
                   children: [
                     ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/アートボード ${(math.Random().nextInt(5)+1)}.png'),
+                      ),
                       title: Text(result['message'],
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1),
