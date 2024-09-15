@@ -19,6 +19,12 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3BxbnZjdWNqa2pkZ2thZXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjYzMDA1OTgsImV4cCI6MjA0MTg3NjU5OH0.T7AhkjJVZKQa0nx7LsV4ZP_kmqGuMWUq_H7G1K12Xb0',
   );
 
+  try {
+    await flutterBeacon.initializeScanning;
+  } on PlatformException catch (e) {
+    log('Failed to initialize scanning', name: 'beacon', error: e);
+  }
+
   // runApp( MyApp(
   //   home: null,
   //   routes: {
@@ -28,7 +34,11 @@ Future<void> main() async {
     routes: {
       '/': (context) => const MyApp(),
       '/main': (context) => HomeScreen(title: 'Home'),
-            '/empathy': (context) => const EmpathyScreen(title: 'Empathy',id: 0 , message: '',),
+      '/empathy': (context) => const EmpathyScreen(
+            title: 'Empathy',
+            id: 0,
+            message: '',
+          ),
       // 他のルートもここに追加
     },
     initialRoute: '/',
@@ -38,32 +48,31 @@ Future<void> main() async {
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});
 
-  Future<void> requestPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetoothAdvertise,
-      Permission.bluetoothScan,
-      // Permission.bluetoothConnect,
-      Permission.locationWhenInUse,
-      Permission.locationAlways,
-      // Permission.bluetooth
-    ].request();
-    log(statuses.toString(), name: 'PermissionStatus');
-  }
+Future<void> requestPermission() async {
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.bluetoothAdvertise,
+    Permission.bluetoothScan,
+    // Permission.bluetoothConnect,
+    Permission.locationWhenInUse,
+    Permission.locationAlways,
+    // Permission.bluetooth
+  ].request();
+  log(statuses.toString(), name: 'PermissionStatus');
+}
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    requestPermission();
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-
+// This widget is the root of your application.
+@override
+Widget build(BuildContext context) {
+  requestPermission();
+  return MaterialApp(
+    title: 'Flutter Demo',
+    theme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      useMaterial3: true,
+    ),
+    home: const MyHomePage(title: 'Flutter Demo Home Page'),
+  );
+}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -120,7 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // final List<Map<String, dynamic>> _scanResult = [];
   final Set<Map<String, dynamic>> _scanResult = {};
-
 
   String _inputMsg = '';
 
@@ -221,7 +229,10 @@ class _MyHomePageState extends State<MyHomePage> {
       }).select();
       // idを16進数に変換
       final id = data.first['id'].toRadixString(16).padLeft(8, '0');
-      await _sp.setStringList("MY_MESSAGE_ID", [...?_sp.getStringList("MY_MESSAGE_ID"), data.first['id'].toString()]);
+      await _sp.setStringList("MY_MESSAGE_ID", [
+        ...?_sp.getStringList("MY_MESSAGE_ID"),
+        data.first['id'].toString()
+      ]);
       setState(() {
         _major = id.substring(0, 4);
         _minor = id.substring(4, 8);
