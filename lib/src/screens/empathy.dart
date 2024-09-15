@@ -22,7 +22,7 @@ class EmpathyScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0), // 余白を追加
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // 縦方向の間隔を均等に配置
+            mainAxisAlignment: MainAxisAlignment.center, // 縦方向の間隔を均等に配置
             crossAxisAlignment: CrossAxisAlignment.center, // 横方向の中央に配置
             children: [
               Text(
@@ -32,6 +32,7 @@ class EmpathyScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold, // 太字に設定（オプション）
                 ),
               ),
+              const SizedBox(height: 16.0), // 余白を追加
               ElevatedButton(
                 onPressed: () {
                   // ボタンが押されたときの処理をここに追加
