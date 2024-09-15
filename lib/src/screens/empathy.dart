@@ -27,7 +27,7 @@ class EmpathyScreen extends StatelessWidget {
             children: [
               Text(
                 message,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24.0, // テキストのサイズを大きく設定
                   fontWeight: FontWeight.bold, // 太字に設定（オプション）
                 ),
@@ -47,7 +47,7 @@ class EmpathyScreen extends StatelessWidget {
                     log('Failed to good message', name: 'supabase', error: e);
                   }
                 },
-                child: Text('共感する'),
+                child: const Text('共感する'),
               ),
             ],
           ),

@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       // Flutter公式サイトThemeを設定
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF94FFD8)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF87FFD3)),
         useMaterial3: true,
         // NavigationBarのテーマを設定
         navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: MaterialStateProperty.all(
-            TextStyle(color: Color(0xFFFDFFC2)),
+          labelTextStyle: WidgetStateProperty.all(
+            const TextStyle(color: Color(0xFFFDFFC2)),
           ),
         ),
       ),
@@ -52,7 +52,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    // final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: _screens[_selectedIndex],
       // 本題のNavigationBar
@@ -66,7 +66,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         // 選択されているタブの色（公式サイトのまま黄色）
         indicatorColor: Colors.amber,
         // 背景色を設定
-        backgroundColor: Color(0xFF94FFD8),
+        backgroundColor: const Color(0xFF94FFD8),
         // 選択されたタブの設定（設定しないと画面は切り替わってもタブの色は変わらないです）
         selectedIndex: _selectedIndex,
         // タブ自体の設定（必須項目のため、書かないとエラーになります）

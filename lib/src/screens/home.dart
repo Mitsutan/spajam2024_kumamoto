@@ -136,7 +136,7 @@ class _HomeScreen extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
-          'ホーム',
+          'みんなの感情',
           style: TextStyle(color: Colors.white),
         ),
       ),

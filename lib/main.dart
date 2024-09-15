@@ -33,7 +33,7 @@ Future<void> main() async {
   runApp(MaterialApp(
     routes: {
       '/': (context) => const MyApp(),
-      '/main': (context) => HomeScreen(title: 'Home'),
+      '/main': (context) => const HomeScreen(title: 'Home'),
       '/empathy': (context) => const EmpathyScreen(
             title: 'Empathy',
             id: 0,
