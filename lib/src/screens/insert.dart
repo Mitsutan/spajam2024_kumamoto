@@ -25,6 +25,20 @@ class _InsertScreen extends State<InsertScreen> {
 
   late SharedPreferences _sp;
 
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  Future<void> _init() async {
+    try {
+      _sp = await SharedPreferences.getInstance();
+    } catch (e) {
+      log('Failed to initialize sharedpref', name: 'sharedpref', error: e);
+    }
+  }
+
   void _startBeacon(String major, String minor) async {
     try {
       final isBroadcasting = await flutterBeacon.isBroadcasting();
