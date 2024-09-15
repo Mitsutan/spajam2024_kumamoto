@@ -28,7 +28,7 @@ Future<void> main() async {
     routes: {
       '/': (context) => const MyApp(),
       '/main': (context) => HomeScreen(title: 'Home'),
-            '/empathy': (context) => const EmpathyScreen(title: 'Empathy', message: '',),
+            '/empathy': (context) => const EmpathyScreen(title: 'Empathy',id: 0 , message: '',),
       // 他のルートもここに追加
     },
     initialRoute: '/',

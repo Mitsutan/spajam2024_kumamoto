@@ -167,7 +167,7 @@ class _HomeScreen extends State<HomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => EmpathyScreen(
-                                title: 'Empathy', message: result['message']),
+                                title: 'Empathy',id: result['id'], message: result['message']),
                           ),
                         );
                         //   try {
